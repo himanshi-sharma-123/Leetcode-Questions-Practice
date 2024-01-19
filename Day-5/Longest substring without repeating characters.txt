@@ -1,0 +1,45 @@
+Example: 
+ 
+        a b c a a b c d b a
+Output: 4
+
+Approach 1: Find all substrings
+
+Approach 2: Using sets  TC=O(2N) SC = O(N)
+
+         int len = 0;
+         int l = 0;
+         HashSet<Character> set = new HashSet<>();
+         for(int r=0;r<s.length();r++){
+            if(!set.contains(s.charAt(r))){
+                set.add(s.charAt(r));
+                len = Math.max(len,r-l+1);
+            }else{
+                while (set.contains(s.charAt(r))) {
+                set.remove(s.charAt(l));
+                l++;
+                }
+                set.add(s.charAt(r));
+            }
+         }
+
+         return len;
+
+Approach 3 : Using Hashmap TC=O(N) SC = O(N)
+
+        HashMap<Character,Integer> map = new HashMap<>();
+        int left=0,right=0;
+
+        int len = 0;
+
+        while(right<s.length()){
+            if(map.containsKey(s.charAt(right)))
+              left = Math.max(map.get(s.charAt(right))+1,left);
+
+              map.put(s.charAt(right),right);
+              len = Math.max(len,right-left+1);     
+              right++; 
+        }
+
+        return len;
+
