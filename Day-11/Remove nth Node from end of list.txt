@@ -1,0 +1,37 @@
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head.next==null){
+            return null;
+        }
+
+        int i=1, l=0;
+        ListNode curr = head;
+        while(curr!=null){
+           curr = curr.next;
+            l++;
+
+        }
+        if(n==l){
+            return head.next;
+        }
+
+
+        int j = l-n;
+        ListNode temp = head;
+        while( i<j){
+            temp = temp.next;
+            i++;
+        }
+        temp.next = temp.next.next ;
+        
+        return head;
+    }
+}
+
+Complexity
+Time complexity: O(n)
+Traverse the linked list twice: once to find its length and once to remove the node.
+
+Space complexity:O(1)
+The algorithm uses constant space, relying on pointers and variables.
+
