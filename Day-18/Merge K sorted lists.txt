@@ -1,0 +1,74 @@
+//  //************ APPROACH 1 USING MERGE 2 LISTS LOGIC*******TC=O(N*K)  SC=O(1)************//
+// class Solution {
+//     public ListNode mergeKLists(ListNode[] lists) {
+//         ListNode result = new ListNode(0);
+
+//         for(ListNode list:lists){
+//             result.next = merge2Lists(result.next,list);
+//         }
+
+//         return result.next;
+//     }
+
+//     public ListNode merge2Lists(ListNode list1, ListNode list2){
+//         if(list1==null) return list2;
+//         if(list2==null) return list1;
+
+//         if(list1.val>list2.val){
+//             ListNode temp = list1;
+//             list1 = list2;
+//             list2 = temp;
+//         }
+
+//         ListNode res = list1;
+
+//         while(list1!=null && list2!=null){
+//             ListNode tmp = null;
+//             while(list1!=null && list1.val<=list2.val){
+//                 tmp = list1;
+//                 list1 = list1.next;
+//             }
+
+//             tmp.next = list2;
+//             ListNode temp = list1;
+//             list1 = list2;
+//             list2 = temp;
+//         }
+
+//         return res;
+//     }
+// }
+
+ //************ APPROACH 2 USING PQ*******TC=O(K*logk)+O(N*K*logK)  SC=O(k)************//
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists==null || lists.length==0) return null;
+
+        PriorityQueue<ListNode> queue= new PriorityQueue<ListNode>(lists.length,new Comparator<ListNode>(){
+            @Override
+            public int compare(ListNode o1,ListNode o2){
+                if(o1.val<o2.val) return -1;
+                else if(o1.val==o2.val) return 0;
+                else return 1;
+            }
+        });
+
+        ListNode dummy = new ListNode(0);
+        ListNode temp = dummy;
+
+        for(ListNode node:lists)
+            if(node!=null) queue.add(node);
+
+            while(!queue.isEmpty()){
+                temp.next = queue.poll();
+                temp = temp.next;
+
+                if(temp.next!=null) queue.add(temp.next);
+            }
+
+            return dummy.next;
+        }
+    
+
+
+}
