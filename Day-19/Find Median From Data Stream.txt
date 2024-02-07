@@ -1,0 +1,40 @@
+Approach : 
+
+STEP 1 : Add the value to the max heap.
+STEP 2 : Remove the top of max heap and add it to the min heap.
+STEP 3 : If the max heap size is less than min heap than remove the top of min heap and add it to the max heap.
+STEP 4 : Finding the median -> If the size of max heap is greater than min heap then peek the top of max heap. If both maxheap and minheap are same size then peek the top of maxheap and minheap, add both and divide it by 2.
+
+TC : 
+
+addnum function : O(logn)
+findMedain function : O(1)
+
+CODE : 
+
+class MedianFinder {
+
+    PriorityQueue<Integer> maxQ;
+    PriorityQueue<Integer> minQ;
+
+    public MedianFinder() {
+       maxQ = new PriorityQueue<>((a,b) -> b-a);
+       minQ = new PriorityQueue<>(); 
+    }
+    
+    public void addNum(int num) {
+       maxQ.offer(num);
+       minQ.offer(maxQ.poll());
+       if(maxQ.size()<minQ.size()){
+           maxQ.offer(minQ.poll());
+       } 
+    }
+    
+    public double findMedian() {
+        if(maxQ.size()==0){
+            return 0;
+        }
+
+        return maxQ.size() > minQ.size() ? maxQ.peek() : (double)(maxQ.peek() + minQ.peek())/2;
+    }
+}
