@@ -1,0 +1,49 @@
+Approach
+The provided solution for merging overlapping intervals from a given list of intervals follows a systematic approach. Here's a breakdown of the idea and approach behind the solution:
+
+Sorting
+Initial Step: The solution starts by sorting the intervals based on their starting points. This is done using Arrays.sort(intervals, (a, b) -> a[0] - b[0]). Sorting is crucial because it aligns intervals in a way that makes it easier to check for overlaps. After sorting, intervals that can potentially merge are placed next to each other.
+Initialization
+Setting the First Interval: After sorting, the algorithm initializes the first interval to consider for merging (intervalStart and intervalEnd) using the first interval in the sorted list. This serves as the starting point for comparison with subsequent intervals.
+Iteration and Merging
+Iterating Over Intervals: The solution iterates through the sorted intervals, starting from the second interval because the first one is already considered as the initial merge candidate.
+Checking for Overlaps: For each interval, the algorithm checks if the current interval's start is greater than the intervalEnd of the interval being considered for merging.
+If true, this means there is no overlap between the current interval and the one being considered for merging. Therefore, the current interval being considered is added to the mergedList as a non-overlapping interval, and the algorithm updates intervalStart and intervalEnd to the current interval, treating it as the next interval to consider for merging.
+If false, this indicates an overlap. The algorithm then updates intervalEnd to the maximum end value between the current interval's end and the intervalEnd of the interval being considered for merging. This effectively merges the current interval with the one being considered by extending the end time of the merge candidate to cover both intervals.
+Final Addition
+Adding Last Interval: After iterating through all intervals, the last interval being considered for merging is added to mergedList. This step is necessary because the last interval to be merged might not have been added inside the loop.
+Complexity
+Time complexity:
+The overall time complexity of the algorithm is dominated by the sorting step, leading to O(NlogN)+O(N)=O(NlogN).
+
+Space complexity:
+Taking both the merged intervals list and the potential auxiliary space for sorting into account, the overall space complexity of the algorithm is O(N), where N is the number of intervals.
+
+Code
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        
+        int totalIntervals = intervals.length;
+
+        int intervalStart = intervals[0][0];
+        int intervalEnd = intervals[0][1];
+
+        List<int[]> mergedList = new ArrayList<>();
+
+        for (int i = 1; i < totalIntervals; i++) {
+            
+            if (intervals[i][0] > intervalEnd) {
+                mergedList.add(new int[] {intervalStart, intervalEnd});
+                
+                intervalStart = intervals[i][0];
+                intervalEnd = intervals[i][1];
+            } else {
+                intervalEnd = Math.max(intervalEnd, intervals[i][1]);
+            }
+        }
+        mergedList.add(new int[] {intervalStart, intervalEnd});
+        
+        return mergedList.toArray(new int[mergedList.size()][]);
+    }
+}

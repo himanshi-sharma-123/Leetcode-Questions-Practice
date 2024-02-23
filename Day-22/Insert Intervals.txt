@@ -1,0 +1,46 @@
+Approach
+The algorithm merges a new interval into a list of sorted, non-overlapping intervals. It iterates through the list of intervals while considering three possible scenarios for each interval in relation to the new interval:
+
+Non-overlapping before the new interval: If the current interval ends before the new interval starts, it's added to the result list as is.
+Non-overlapping after the new interval: If the current interval starts after the new interval ends, this indicates that all possible merges have been done. The new interval is added to the result list, and the current interval becomes the next new interval to consider.
+Overlapping intervals: If the current interval overlaps with the new interval (i.e., the current interval starts before the new interval ends or ends after the new interval starts), the intervals are merged. This is done by updating the start of the new interval to the minimum start of both intervals and the end to the maximum end of both.
+This process is repeated for each interval in the list. After iterating through all intervals, the last version of the new interval (which might have been merged with several intervals in the list) is added to the result. This ensures that all overlapping intervals are merged into a single interval, and all non-overlapping intervals are kept intact.
+
+Complexity
+Time complexity:
+The time complexity of this algorithm is O(N), where N is the number of intervals in the input list. This efficiency arises because the algorithm iterates through the list of intervals exactly once. Each interval is considered once and is either added to the result list directly or merged with the new interval, which is also a constant time operation.
+
+Space complexity:
+The space complexity is O(1). Apart from the space required for the output, the algorithm uses a constant amount of space for variables such as loop counters and temporary variables to store interval bounds during merging (i.e., the start and end of the new interval being merged). This space does not scale with the input size and is thus considered O(1).
+
+Code:
+
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> mergedIntervals = new ArrayList<>();
+
+        for (int[] interval : intervals) {
+            
+            // Before the new interval
+            if (interval[1] < newInterval[0]) {
+                mergedIntervals.add(interval);
+            } 
+            // After the new interval
+            else if (interval[0] > newInterval[1]) {
+                mergedIntervals.add(newInterval);
+                newInterval = interval; // Update newInterval to current, as it will be added in order afterwards
+            } 
+            // Overlapping intervals
+            else {
+                // Merge with newInterval by updating its start and end as needed
+                newInterval[0] = Math.min(newInterval[0], interval[0]);
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            }
+        }
+
+        // Add the last interval, which is either the original newInterval or the one merged with others
+        mergedIntervals.add(newInterval);
+
+        return mergedIntervals.toArray(new int[mergedIntervals.size()][2]);
+    }
+}
