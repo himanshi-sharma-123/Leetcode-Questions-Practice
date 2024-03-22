@@ -1,0 +1,47 @@
+////////////// MEMOIZATION /////////////////////////////
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int memo[] = new int[s.length()+1];
+        Arrays.fill(memo,-1);
+        int index = 0;
+        return solve(s,index,wordDict,memo);
+    }
+
+    public boolean solve(String s, int index, List<String> wordDict, int memo[]){
+        if (index == s.length())
+            return true;
+
+            if(memo[index]!=-1){
+                return memo[index] == 1;
+            }
+
+        boolean ans = false;
+        for (String word : wordDict) {
+            if (s.startsWith(word, index))
+                ans = ans || solve(s, index + word.length(), wordDict, memo);
+        }
+
+        memo[index] = ans ? 1 : 0;
+        return ans;
+    }
+}
+/////////////// RECURSIVE ///////////////////////
+
+// class Solution {
+//     public boolean wordBreak(String s, List<String> wordDict) {
+//         int index = 0;
+//         return solve(s,index,wordDict);
+//     }
+
+//     public boolean solve(String s, int index, List<String> wordDict){
+//         if (index == s.length())
+//             return true;
+//         boolean ans = false;
+//         for (int j = 0; j < wordDict.size(); j++) {
+//             if (s.substring(index).startsWith(wordDict.get(j)))
+//                 ans = ans || solve(s, index + wordDict.get(j).length(), wordDict);
+//         }
+//         return ans;
+//     }
+// }
